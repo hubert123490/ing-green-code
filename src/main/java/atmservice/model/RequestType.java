@@ -1,4 +1,4 @@
-package model;
+package atmservice.model;
 
 public enum RequestType {
     FAILURE_RESTART("FAILURE_RESTART"),
