@@ -1,8 +1,8 @@
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
-import logic.JsonParser;
-import logic.Processor;
+import atmservice.logic.JsonParser;
+import atmservice.logic.ATMService;
 
 import java.io.*;
 import java.net.InetSocketAddress;
@@ -27,7 +27,7 @@ public class Main {
                 String requestBodyString = new String(requestBodyBytes);
 
                 var parsedReq = JsonParser.parseRequest(requestBodyString);
-                var result = Processor.process(parsedReq);
+                var result = ATMService.process(parsedReq);
 
 
                 // Send a response
