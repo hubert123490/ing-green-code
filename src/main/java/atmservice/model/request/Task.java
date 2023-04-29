@@ -1,6 +1,6 @@
-package model.request;
+package atmservice.model.request;
 
-import model.RequestType;
+import atmservice.model.RequestType;
 
 public class Task {
     private int atmId;

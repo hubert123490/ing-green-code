@@ -1,15 +1,16 @@
-package logic;
+package atmservice.logic;
 
-import model.RequestType;
-import model.request.ServiceTasks;
-import model.request.Task;
+import atmservice.model.RequestType;
+import atmservice.model.request.ServiceTasks;
+import atmservice.model.request.Task;
+import atmservice.model.response.ATM;
+import atmservice.model.response.Order;
 
 import javax.json.*;
 import java.io.StringReader;
-import java.util.*;
 
 public class JsonParser {
-    private static final int REGION_LIMIT = 9999;
+
     public static ServiceTasks parseRequest(String req) {
         ServiceTasks serviceTasks = new ServiceTasks();
 
@@ -28,33 +29,18 @@ public class JsonParser {
         return serviceTasks;
     }
 
-    public static String parseResponse(Map<Integer, Map<RequestType, List<Integer>>> res) {
+    public static String parseResponse(Order res) {
         JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
 
-        for(int i = 0; i < REGION_LIMIT; i++) {
-            if(res.get(i) == null) continue;
-
-            for(int num : getPriorityArray(res.get(i))) {
+        for(ATM atm : res.getAtms()) {
                 JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
-                objectBuilder.add("region", i);
-                objectBuilder.add("atmId", num);
+                objectBuilder.add("region", atm.getRegion());
+                objectBuilder.add("atmId", atm.getAtmId());
                 JsonObject obj = objectBuilder.build();
                 arrayBuilder.add(obj);
-            }
         }
 
         return arrayBuilder.build().toString();
     }
 
-    private static Set<Integer> getPriorityArray(Map<RequestType, List<Integer>> priorities) {
-        Set<Integer> response = new HashSet<>();
-
-        for (RequestType type : RequestType.values()) {
-            List<Integer> priorityArray = priorities.get(type);
-            if(priorityArray == null) continue;
-            response.addAll(priorityArray);
-        }
-
-        return response;
-    }
 }
