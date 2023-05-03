@@ -1,45 +1,46 @@
 package atmservice.logic;
 
-import atmservice.model.RequestType;
+import atmservice.model.request.RequestType;
 import atmservice.model.request.ServiceTasks;
 import atmservice.model.request.Task;
 import atmservice.model.response.ATM;
 import atmservice.model.response.Order;
 
 import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class ATMService {
-    private static final int REGION_LIMIT = 9999;
-    public static Order process(ServiceTasks serviceTasks) {
-        Order response = new Order();
-        Map<Integer, Map<RequestType, List<Integer>>> regions = new HashMap<>();
 
-        for(Task task : serviceTasks.getTasks()) {
-            Map<RequestType, List<Integer>> priorityMap = regions.computeIfAbsent(task.getRegion(), k -> new HashMap<>());
-            var typeArray = priorityMap.computeIfAbsent(task.getRequestType(), k -> new ArrayList<>());
-            typeArray.add(task.getAtmId());
-        }
-
-        for(int i = 0; i < REGION_LIMIT; i++) {
-            if(regions.get(i) == null) continue;
-
-            for(int num : getPriorityArray(regions.get(i))) {
-                response.getAtms().add(new ATM(num, i));
-            }
-        }
-
-        return response;
+    public static Order getOrderFromServiceTasks(ServiceTasks serviceTasks) {
+        Map<Integer, Map<RequestType, List<ATM>>> regionMap = getRegionRequestsByRequestType.apply(serviceTasks);
+        return new Order(getSortedATMs.apply(regionMap));
     }
 
-    private static Set<Integer> getPriorityArray(Map<RequestType, List<Integer>> priorities) {
-        Set<Integer> response = new LinkedHashSet<>();
+    private static final Function<ServiceTasks, Map<Integer, Map<RequestType, List<ATM>>>> getRegionRequestsByRequestType = serviceTasks -> (
+            serviceTasks.getTasks().parallelStream()
+                    .collect(Collectors.groupingBy(
+                            Task::getRegion,
+                            Collectors.groupingBy(
+                                    Task::getRequestType,
+                                    Collectors.mapping(ATM::new, Collectors.toList())
+                            )
+                    ))
+    );
 
-        for (RequestType type : RequestType.values()) {
-            List<Integer> priorityArray = priorities.get(type);
-            if(priorityArray == null) continue;
-            response.addAll(priorityArray);
-        }
+    private static final Function<Map<RequestType, List<ATM>>, List<ATM>> getDistinctOrderedATMsByRegion = regionRequestMap -> (
+            Arrays.stream(RequestType.values())
+                    .flatMap(type -> regionRequestMap.containsKey(type) ? regionRequestMap.get(type).stream() : Stream.empty())
+                    .distinct()
+                    .collect(Collectors.toList())
+    );
 
-        return response;
-    }
+    private static final Function<Map<Integer, Map<RequestType, List<ATM>>>, List<ATM>> getSortedATMs = regions -> (
+            regions.entrySet().parallelStream()
+                    .sorted(Map.Entry.comparingByKey())
+                    .map(Map.Entry::getValue).map(getDistinctOrderedATMsByRegion)
+                    .flatMap(List::stream)
+                    .collect(Collectors.toList())
+    );
 }
