@@ -1,11 +1,11 @@
 package atmservice.model.request;
 
-import atmservice.model.RequestType;
+import java.util.Objects;
 
 public class Task {
-    private int atmId;
-    private int region;
-    private RequestType requestType;
+    private final int atmId;
+    private final int region;
+    private final RequestType requestType;
 
     public Task(int atmId, int region, RequestType requestType) {
         this.atmId = atmId;
@@ -17,23 +17,24 @@ public class Task {
         return region;
     }
 
-    public void setRegion(int region) {
-        this.region = region;
-    }
-
     public RequestType getRequestType() {
         return requestType;
-    }
-
-    public void setRequestType(RequestType requestType) {
-        this.requestType = requestType;
     }
 
     public int getAtmId() {
         return atmId;
     }
 
-    public void setAtmId(int atmId) {
-        this.atmId = atmId;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Task task = (Task) o;
+        return atmId == task.atmId && region == task.region && requestType == task.requestType;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(atmId, region, requestType);
     }
 }

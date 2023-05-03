@@ -1,12 +1,10 @@
 package atmservice.model.request;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class ServiceTasks {
-    private List<Task> tasks = new ArrayList<>();
-
-    public ServiceTasks() {}
+    private final List<Task> tasks;
 
     public ServiceTasks(List<Task> tasks) {
         this.tasks = tasks;
@@ -16,7 +14,16 @@ public class ServiceTasks {
         return tasks;
     }
 
-    public void setTasks(List<Task> tasks) {
-        this.tasks = tasks;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ServiceTasks that = (ServiceTasks) o;
+        return Objects.equals(tasks, that.tasks);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(tasks);
     }
 }
