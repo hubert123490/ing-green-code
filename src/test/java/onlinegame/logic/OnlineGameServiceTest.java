@@ -12,7 +12,7 @@ import java.util.List;
 public class OnlineGameServiceTest {
 
     @Test
-    public void testCase1() {
+    public void getOrderFromPlayersWorks() {
         // given
         Players players = new Players(6, List.of(
                 new Clan(4, 50),
@@ -45,7 +45,7 @@ public class OnlineGameServiceTest {
                 ))));
 
         // when
-        Order result = OnlineGameService.process(players);
+        Order result = OnlineGameService.getOrderFromPlayers(players);
 
         // then
         Assert.assertEquals(expectedResult, result);
