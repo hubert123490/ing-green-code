@@ -5,38 +5,60 @@ import onlinegame.model.response.Group;
 import onlinegame.model.request.Players;
 import onlinegame.model.response.Order;
 
-import java.util.Iterator;
-import java.util.PriorityQueue;
+import java.util.*;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 
 public class OnlineGameService {
-    public static Order process(Players req) {
-        Order order = new Order();
-        PriorityQueue<Clan> priorityQueue = new PriorityQueue<>((Clan p1, Clan p2) ->
-        {
-            int result = p2.getPoints() - p1.getPoints();
-            if (result == 0) {
-                result = Integer.compare(p1.getNumberOfPlayers(), p2.getNumberOfPlayers());
-            }
-            return result;
-        });
+    private static final Comparator<Clan> clanComparator = Comparator
+            .comparingInt(Clan::getPoints)
+            .reversed()
+            .thenComparingInt(Clan::getNumberOfPlayers);
 
-        priorityQueue.addAll(req.getClans());
+    public static Order getOrderFromPlayers(Players players) {
+        PriorityQueue<Clan> orderedClansQueue = getSortedClansQueue.apply(players);
 
-        while (!priorityQueue.isEmpty()) {
-            int sum = 0;
-            Iterator<Clan> iterator = priorityQueue.iterator();
-            Group group = new Group();
-            order.getGroups().add(group);
-            while (iterator.hasNext() && sum != req.getGroupCount()) {
-                Clan clan = iterator.next();
-                if (sum + clan.getNumberOfPlayers() > req.getGroupCount()) continue;
-                sum += clan.getNumberOfPlayers();
-                group.getClans().add(clan);
-                iterator.remove();
-            }
+        return new Order(getSortedGroups.apply(orderedClansQueue, players.getGroupCount()));
+    }
+
+    private static final BiFunction<Iterator<Clan>, Integer, List<Clan>> getSortedClans
+            = (iterator, groupCount) -> {
+        List<Clan> clans = new ArrayList<>();
+        int sum = 0;
+
+        while (iterator.hasNext() && sum < groupCount) {
+            Clan clan = iterator.next();
+            int clanSize = clan.getNumberOfPlayers();
+
+            if (sum + clanSize > groupCount) continue;
+
+            clans.add(clan);
+            sum += clanSize;
+            iterator.remove();
         }
 
-        return order;
-    }
-}
+        return clans;
+    };
 
+    private static final BiFunction<PriorityQueue<Clan>, Integer, List<Group>> getSortedGroups
+            = (orderedClans, groupCount) -> {
+        List<Group> groups = new ArrayList<>();
+
+        while (!orderedClans.isEmpty()) {
+            Iterator<Clan> iterator = orderedClans.iterator();
+
+            groups.add(new Group(getSortedClans.apply(iterator, groupCount)));
+        }
+
+        return groups;
+    };
+
+
+    private static final Function<Players, PriorityQueue<Clan>> getSortedClansQueue = players -> {
+        PriorityQueue<Clan> priorityQueue = new PriorityQueue<>(clanComparator);
+
+        priorityQueue.addAll(players.getClans());
+
+        return priorityQueue;
+    };
+}
