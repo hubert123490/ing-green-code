@@ -1,40 +1,30 @@
 package transactions.model.request;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Objects;
 
 public class Transaction {
-    private String debitAccount;
-    private String creditAccount;
-    private Double amount;
+    private final String debitAccount;
+    private final String creditAccount;
+    private final BigDecimal amount;
 
-    public Transaction(String debitAccount, String creditAccount, Double amount) {
+    public Transaction(String debitAccount, String creditAccount, float amount) {
         this.debitAccount = debitAccount;
         this.creditAccount = creditAccount;
-        this.amount = amount;
+        this.amount = BigDecimal.valueOf(amount).setScale(2, RoundingMode.HALF_UP);
     }
 
     public String getDebitAccount() {
         return debitAccount;
     }
 
-    public void setDebitAccount(String debitAccount) {
-        this.debitAccount = debitAccount;
-    }
-
     public String getCreditAccount() {
         return creditAccount;
     }
 
-    public void setCreditAccount(String creditAccount) {
-        this.creditAccount = creditAccount;
-    }
-
-    public Double getAmount() {
+    public BigDecimal getAmount() {
         return amount;
-    }
-
-    public void setAmount(Double amount) {
-        this.amount = amount;
     }
 
     @Override

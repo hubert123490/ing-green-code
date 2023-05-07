@@ -8,28 +8,15 @@ public class Clan {
         this.points = points;
     }
 
-    private int numberOfPlayers;
-    private int points;
+    private final int numberOfPlayers;
+    private final int points;
 
     public int getNumberOfPlayers() {
         return numberOfPlayers;
     }
 
-    public void setNumberOfPlayers(int numberOfPlayers) {
-        this.numberOfPlayers = numberOfPlayers;
-    }
-
     public int getPoints() {
         return points;
-    }
-
-    public void setPoints(int points) {
-        this.points = points;
-    }
-
-    @Override
-    public Object clone() throws CloneNotSupportedException {
-        return super.clone();
     }
 
     @Override

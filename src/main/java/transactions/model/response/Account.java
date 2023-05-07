@@ -1,14 +1,15 @@
 package transactions.model.response;
 
+import java.math.BigDecimal;
 import java.util.Objects;
 
 public class Account {
-    private String account;
+    private final String account;
     private Integer debitCount;
     private Integer creditCount;
-    private Double balance;
+    private BigDecimal balance;
 
-    public Account(String account, Integer debitCount, Integer creditCount, Double balance) {
+    public Account(String account, Integer debitCount, Integer creditCount, BigDecimal balance) {
         this.account = account;
         this.debitCount = debitCount;
         this.creditCount = creditCount;
@@ -17,10 +18,6 @@ public class Account {
 
     public String getAccount() {
         return account;
-    }
-
-    public void setAccount(String account) {
-        this.account = account;
     }
 
     public Integer getDebitCount() {
@@ -39,11 +36,11 @@ public class Account {
         this.creditCount = creditCount;
     }
 
-    public Double getBalance() {
+    public BigDecimal getBalance() {
         return balance;
     }
 
-    public void setBalance(Double balance) {
+    public void setBalance(BigDecimal balance) {
         this.balance = balance;
     }
 

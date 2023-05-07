@@ -17,10 +17,6 @@ public class Order {
         return atms;
     }
 
-    public void setAtms(List<ATM> atms) {
-        this.atms = atms;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
