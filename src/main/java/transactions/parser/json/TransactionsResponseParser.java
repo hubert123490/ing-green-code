@@ -1,31 +1,29 @@
 package transactions.parser.json;
 
+import java.util.function.Function;
+
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
 import transactions.model.response.Account;
 import transactions.model.response.Accounts;
 
-import javax.json.Json;
-import javax.json.JsonArrayBuilder;
-import javax.json.JsonObjectBuilder;
-import javax.json.JsonValue;
-import java.util.function.Function;
-
 public class TransactionsResponseParser {
     public static String parseResponse(Accounts accounts) {
-        JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
+        JSONArray jsonArray = new JSONArray();
 
-        accounts.getAccounts().stream().map(parseTransactionToJsonObject).forEach(jsonValue -> arrayBuilder.add(jsonValue.asJsonObject()));
+        accounts.getAccounts().stream().map(parseTransactionToJsonObject).forEach(jsonArray::add);
 
-        return arrayBuilder.build().toString();
+        return jsonArray.toJSONString();
     }
 
-    private static final Function<Account, JsonValue> parseTransactionToJsonObject = account -> {
-        JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
+    private static final Function<Account, JSONObject> parseTransactionToJsonObject = account -> {
+        JSONObject jsonObject = new JSONObject();
 
-        objectBuilder.add("account", account.getAccount());
-        objectBuilder.add("debitCount", account.getDebitCount());
-        objectBuilder.add("creditCount", account.getCreditCount());
-        objectBuilder.add("balance", account.getBalance());
+        jsonObject.put("account", account.getAccount());
+        jsonObject.put("debitCount", account.getDebitCount());
+        jsonObject.put("creditCount", account.getCreditCount());
+        jsonObject.put("balance", account.getBalance());
 
-        return objectBuilder.build();
+        return jsonObject;
     };
 }

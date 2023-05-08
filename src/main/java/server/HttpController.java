@@ -13,45 +13,15 @@ public abstract class HttpController implements HttpRESTHandler, HttpHandler {
         String requestMethod = exchange.getRequestMethod().toUpperCase();
         String requestBody = this.readRequestBody(exchange);
 
-        switch (requestMethod) {
-            case "POST" -> handlePost(exchange, requestBody);
-            case "GET" -> handleGet(exchange, requestBody);
-            case "PUT" -> handlePut(exchange, requestBody);
-            case "PATCH" -> handlePatch(exchange, requestBody);
-            case "DELETE" -> handleDelete(exchange, requestBody);
-            default -> sendDefaultResponse(exchange);
+        if ("POST".equals(requestMethod)) {
+            handlePost(exchange, requestBody);
+        } else {
+            sendDefaultResponse(exchange);
         }
     }
 
     @Override
-    public void handlePost(HttpExchange exchange, String requestBody) throws IOException {
-        exchange.sendResponseHeaders(404, 0);
-        exchange.close();
-    }
-
-    @Override
-    public void handleGet(HttpExchange exchange, String requestBody) throws IOException {
-        exchange.sendResponseHeaders(404, 0);
-        exchange.close();
-    }
-
-    @Override
-    public void handlePatch(HttpExchange exchange, String requestBody) throws IOException {
-        exchange.sendResponseHeaders(404, 0);
-        exchange.close();
-    }
-
-    @Override
-    public void handlePut(HttpExchange exchange, String requestBody) throws IOException {
-        exchange.sendResponseHeaders(404, 0);
-        exchange.close();
-    }
-
-    @Override
-    public void handleDelete(HttpExchange exchange, String requestBody) throws IOException {
-        exchange.sendResponseHeaders(404, 0);
-        exchange.close();
-    }
+    public abstract void handlePost(HttpExchange exchange, String requestBody) throws IOException;
 
     private String readRequestBody(HttpExchange exchange) throws IOException {
         InputStream requestBody = exchange.getRequestBody();
