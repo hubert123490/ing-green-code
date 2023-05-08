@@ -1,19 +1,17 @@
 package transactions.parser.json;
 
-import transactions.model.request.Transaction;
-import transactions.model.request.Transactions;
-
-import net.minidev.json.JSONArray;
-import net.minidev.json.JSONObject;
-import net.minidev.json.JSONValue;
-
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
+import transactions.model.request.Transaction;
+import transactions.model.request.Transactions;
+
 public class TransactionsRequestParser {
     public static Transactions parseRequest(String jsonRequest) {
-        JSONArray jsonArray = (JSONArray) JSONValue.parse(jsonRequest);
+        JSONArray jsonArray = JSONArray.parseArray(jsonRequest);
 
         List<Transaction> transactions = parseJsonArrayToTransactions(jsonArray);
 
@@ -27,9 +25,9 @@ public class TransactionsRequestParser {
     private static final Function<Object, Transaction> parseJsonObjectToTransaction = obj -> {
         JSONObject jsonObject = (JSONObject) obj;
 
-        String debitAccount = jsonObject.get("debitAccount").toString();
-        String creditAccount = jsonObject.get("creditAccount").toString();
-        float amount = Float.parseFloat(jsonObject.get("amount").toString());
+        String debitAccount = jsonObject.getString("debitAccount");
+        String creditAccount = jsonObject.getString("creditAccount");
+        float amount = jsonObject.getFloatValue("amount");
 
         return new Transaction(debitAccount, creditAccount, amount);
     };

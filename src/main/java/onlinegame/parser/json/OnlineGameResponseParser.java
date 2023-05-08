@@ -1,12 +1,12 @@
 package onlinegame.parser.json;
 
+import java.util.function.Function;
+
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
 import onlinegame.model.request.Clan;
 import onlinegame.model.response.Group;
 import onlinegame.model.response.Order;
-import net.minidev.json.JSONArray;
-import net.minidev.json.JSONObject;
-
-import java.util.function.Function;
 
 public class OnlineGameResponseParser {
     public static String parseResponse(Order order) {

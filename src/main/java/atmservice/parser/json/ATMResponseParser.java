@@ -2,26 +2,27 @@ package atmservice.parser.json;
 
 import atmservice.model.response.ATM;
 import atmservice.model.response.Order;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
 
-import javax.json.*;
 import java.util.function.Function;
 
 public class ATMResponseParser {
 
     public static String parseResponse(Order order) {
-        JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
+        JSONArray jsonArray = new JSONArray();
 
-        order.getAtms().stream().map(parseTaskToJsonObject).forEach(jsonValue -> arrayBuilder.add(jsonValue.asJsonObject()));
+        order.getAtms().stream().map(parseTaskToJsonObject).forEach(jsonArray::add);
 
-        return arrayBuilder.build().toString();
+        return jsonArray.toJSONString();
     }
 
-    private static final Function<ATM, JsonValue> parseTaskToJsonObject = atm -> {
-        JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
+    private static final Function<ATM, JSONObject> parseTaskToJsonObject = atm -> {
+        JSONObject jsonObject = new JSONObject();
 
-        objectBuilder.add("region", atm.getRegion());
-        objectBuilder.add("atmId", atm.getAtmId());
+        jsonObject.put("region", atm.getRegion());
+        jsonObject.put("atmId", atm.getAtmId());
 
-        return objectBuilder.build();
+        return jsonObject;
     };
 }
