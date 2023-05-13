@@ -10,6 +10,8 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 
 public class OnlineGameService {
+
+    private OnlineGameService() {}
     private static final Comparator<Clan> clanComparator = Comparator
             .comparingInt(Clan::getPoints)
             .reversed()

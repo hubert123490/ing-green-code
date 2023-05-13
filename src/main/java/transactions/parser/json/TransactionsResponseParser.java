@@ -8,10 +8,12 @@ import transactions.model.response.Account;
 import transactions.model.response.Accounts;
 
 public class TransactionsResponseParser {
+
+    private TransactionsResponseParser() {}
     public static String parseResponse(Accounts accounts) {
         JSONArray jsonArray = new JSONArray();
 
-        accounts.getAccounts().stream().map(parseTransactionToJsonObject).forEach(jsonArray::add);
+        accounts.getAccountNames().stream().map(parseTransactionToJsonObject).forEach(jsonArray::add);
 
         return jsonArray.toJSONString();
     }
@@ -19,7 +21,7 @@ public class TransactionsResponseParser {
     private static final Function<Account, JSONObject> parseTransactionToJsonObject = account -> {
         JSONObject jsonObject = new JSONObject();
 
-        jsonObject.put("account", account.getAccount());
+        jsonObject.put("account", account.getAccountName());
         jsonObject.put("debitCount", account.getDebitCount());
         jsonObject.put("creditCount", account.getCreditCount());
         jsonObject.put("balance", account.getBalance());

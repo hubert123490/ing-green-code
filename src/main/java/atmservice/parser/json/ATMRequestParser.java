@@ -8,9 +8,10 @@ import com.alibaba.fastjson2.JSONObject;
 
 import java.util.List;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 public class ATMRequestParser {
+
+    private ATMRequestParser() {}
 
     public static ServiceTasks parseRequest(String jsonRequest) {
         JSONArray jsonArray = JSONArray.parseArray(jsonRequest);
@@ -19,7 +20,7 @@ public class ATMRequestParser {
     }
 
     private static List<Task> parseJsonArrayToTasks(JSONArray jsonArray) {
-        return jsonArray.stream().map(parseJsonObjectToTask).collect(Collectors.toList());
+        return jsonArray.stream().map(parseJsonObjectToTask).toList();
     }
 
     private static final Function<Object, Task> parseJsonObjectToTask = obj -> {

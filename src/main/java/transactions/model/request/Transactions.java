@@ -4,20 +4,14 @@ import java.util.List;
 import java.util.Objects;
 
 public class Transactions {
-    private List<Transaction> transactions;
+    private final List<Transaction> transactionList;
 
-    public Transactions() {}
-
-    public Transactions(List<Transaction> transactions) {
-        this.transactions = transactions;
+    public Transactions(List<Transaction> transactionList) {
+        this.transactionList = transactionList;
     }
 
-    public List<Transaction> getTransactions() {
-        return transactions;
-    }
-
-    public void setTransactions(List<Transaction> transactions) {
-        this.transactions = transactions;
+    public List<Transaction> getTransactionList() {
+        return transactionList;
     }
 
     @Override
@@ -25,11 +19,11 @@ public class Transactions {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Transactions that = (Transactions) o;
-        return Objects.equals(transactions, that.transactions);
+        return Objects.equals(transactionList, that.transactionList);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(transactions);
+        return Objects.hash(transactionList);
     }
 }
