@@ -18,4 +18,4 @@ WORKDIR /app
 RUN chmod +x /app/docker-scripts-wrapper.sh
 
 # Set the entrypoint to execute both scripts
-ENTRYPOINT ["/app/docker-scripts-wrapper.sh"]
+ENTRYPOINT ["bash", "/app/docker-scripts-wrapper.sh"]
