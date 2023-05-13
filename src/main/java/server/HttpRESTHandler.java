@@ -1,9 +1,9 @@
 package server;
 
-import com.sun.net.httpserver.HttpExchange;
+import io.undertow.server.HttpServerExchange;
 
 import java.io.IOException;
 
 public interface HttpRESTHandler {
-    void handlePost(HttpExchange exchange, String requestBody) throws IOException;
+    void handlePostRequest(HttpServerExchange exchange, String requestBody) throws IOException;
 }

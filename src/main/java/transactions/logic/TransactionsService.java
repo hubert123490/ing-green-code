@@ -8,16 +8,17 @@ import transactions.model.request.Transactions;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class TransactionsService {
+    private TransactionsService() {}
+
     public static Accounts getAccountsFromTransactions(Transactions transactions) {
         Map<String, Account> accountMap = getCalculatedAccounts(transactions);
         PriorityQueue<String> sortedAccountsKeys = getAccountsByAccountName(accountMap);
 
         List<Account> result = sortedAccountsKeys.parallelStream()
                 .map(accountMap::get)
-                .collect(Collectors.toList());
+                .toList();
 
         return new Accounts(result);
     }
@@ -25,7 +26,7 @@ public class TransactionsService {
     private static Map<String, Account> getCalculatedAccounts(Transactions transactions) {
         Map<String, Account> accountMap = new HashMap<>();
 
-        for (Transaction transaction : transactions.getTransactions()) {
+        for (Transaction transaction : transactions.getTransactionList()) {
             updateAccount(accountMap, transaction.getDebitAccount(), transaction.getAmount().negate(), true);
             updateAccount(accountMap, transaction.getCreditAccount(), transaction.getAmount(), false);
         }

@@ -13,6 +13,8 @@ import java.util.stream.Stream;
 
 public class ATMService {
 
+    private ATMService() {}
+
     public static Order getOrderFromServiceTasks(ServiceTasks serviceTasks) {
         Map<Integer, Map<RequestType, List<ATM>>> regionMap = getRegionRequestsByRequestType.apply(serviceTasks);
         return new Order(getSortedATMs.apply(regionMap));
@@ -33,7 +35,7 @@ public class ATMService {
             Arrays.stream(RequestType.values())
                     .flatMap(type -> regionRequestMap.containsKey(type) ? regionRequestMap.get(type).stream() : Stream.empty())
                     .distinct()
-                    .collect(Collectors.toList())
+                    .toList()
     );
 
     private static final Function<Map<Integer, Map<RequestType, List<ATM>>>, List<ATM>> getSortedATMs = regions -> (
@@ -41,6 +43,6 @@ public class ATMService {
                     .sorted(Map.Entry.comparingByKey())
                     .map(Map.Entry::getValue).map(getDistinctOrderedATMsByRegion)
                     .flatMap(List::stream)
-                    .collect(Collectors.toList())
+                    .toList()
     );
 }

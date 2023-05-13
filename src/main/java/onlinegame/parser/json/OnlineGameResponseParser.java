@@ -9,6 +9,9 @@ import onlinegame.model.response.Group;
 import onlinegame.model.response.Order;
 
 public class OnlineGameResponseParser {
+
+    private OnlineGameResponseParser() {}
+
     public static String parseResponse(Order order) {
         JSONArray jsonArray = new JSONArray();
 

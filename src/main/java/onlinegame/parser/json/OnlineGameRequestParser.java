@@ -2,7 +2,6 @@ package onlinegame.parser.json;
 
 import java.util.List;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
@@ -10,6 +9,9 @@ import onlinegame.model.request.Clan;
 import onlinegame.model.request.Players;
 
 public class OnlineGameRequestParser {
+
+    private OnlineGameRequestParser() {}
+
     public static Players parseRequest(String jsonRequest) {
         JSONObject jsonObject = JSONObject.parseObject(jsonRequest);
         JSONArray jsonArray = jsonObject.getJSONArray("clans");
@@ -23,7 +25,7 @@ public class OnlineGameRequestParser {
     private static List<Clan> parseJsonArrayToClans(JSONArray jsonArray) {
         return jsonArray.stream()
                 .map(parseJsonObjectToClan)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     private static final Function<Object, Clan> parseJsonObjectToClan = jsonObject -> {

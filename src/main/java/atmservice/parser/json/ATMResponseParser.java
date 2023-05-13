@@ -9,6 +9,8 @@ import java.util.function.Function;
 
 public class ATMResponseParser {
 
+    private ATMResponseParser() {}
+
     public static String parseResponse(Order order) {
         JSONArray jsonArray = new JSONArray();
 

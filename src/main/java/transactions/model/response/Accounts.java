@@ -1,23 +1,18 @@
 package transactions.model.response;
 
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 public class Accounts {
-    private List<Account> accounts = new ArrayList<>();
+    private final List<Account> accountNames;
 
-    public Accounts(List<Account> accounts) {
-        this.accounts = accounts;
+    public Accounts(List<Account> accountNames) {
+        this.accountNames = accountNames;
     }
 
-    public List<Account> getAccounts() {
-        return accounts;
-    }
-
-    public void setAccounts(List<Account> accounts) {
-        this.accounts = accounts;
+    public List<Account> getAccountNames() {
+        return accountNames;
     }
 
     @Override
@@ -25,11 +20,11 @@ public class Accounts {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Accounts accounts1 = (Accounts) o;
-        return Objects.equals(accounts, accounts1.accounts);
+        return Objects.equals(accountNames, accounts1.accountNames);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(accounts);
+        return Objects.hash(accountNames);
     }
 }

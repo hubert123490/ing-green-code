@@ -4,20 +4,20 @@ import java.math.BigDecimal;
 import java.util.Objects;
 
 public class Account {
-    private final String account;
+    private final String accountName;
     private Integer debitCount;
     private Integer creditCount;
     private BigDecimal balance;
 
-    public Account(String account, Integer debitCount, Integer creditCount, BigDecimal balance) {
-        this.account = account;
+    public Account(String accountName, Integer debitCount, Integer creditCount, BigDecimal balance) {
+        this.accountName = accountName;
         this.debitCount = debitCount;
         this.creditCount = creditCount;
         this.balance = balance;
     }
 
-    public String getAccount() {
-        return account;
+    public String getAccountName() {
+        return accountName;
     }
 
     public Integer getDebitCount() {
@@ -49,11 +49,11 @@ public class Account {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Account account1 = (Account) o;
-        return Objects.equals(account, account1.account) && Objects.equals(debitCount, account1.debitCount) && Objects.equals(creditCount, account1.creditCount) && Objects.equals(balance, account1.balance);
+        return Objects.equals(accountName, account1.accountName) && Objects.equals(debitCount, account1.debitCount) && Objects.equals(creditCount, account1.creditCount) && Objects.equals(balance, account1.balance);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(account, debitCount, creditCount, balance);
+        return Objects.hash(accountName, debitCount, creditCount, balance);
     }
 }
