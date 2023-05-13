@@ -13,7 +13,7 @@ public class TransactionsResponseParser {
     public static String parseResponse(Accounts accounts) {
         JSONArray jsonArray = new JSONArray();
 
-        accounts.getAccountNames().stream().map(parseTransactionToJsonObject).forEach(jsonArray::add);
+        accounts.getAccountList().stream().map(parseTransactionToJsonObject).forEach(jsonArray::add);
 
         return jsonArray.toJSONString();
     }
@@ -21,7 +21,7 @@ public class TransactionsResponseParser {
     private static final Function<Account, JSONObject> parseTransactionToJsonObject = account -> {
         JSONObject jsonObject = new JSONObject();
 
-        jsonObject.put("account", account.getAccountName());
+        jsonObject.put("account", account.getId());
         jsonObject.put("debitCount", account.getDebitCount());
         jsonObject.put("creditCount", account.getCreditCount());
         jsonObject.put("balance", account.getBalance());
