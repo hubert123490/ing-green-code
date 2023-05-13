@@ -1,7 +1,7 @@
 package transactions.controller;
 
-import com.sun.net.httpserver.HttpExchange;
-
+import io.undertow.server.HttpServerExchange;
+import io.undertow.util.Headers;
 import server.HttpController;
 import transactions.logic.TransactionsService;
 import transactions.model.request.Transactions;
@@ -9,13 +9,10 @@ import transactions.model.response.Accounts;
 import transactions.parser.json.TransactionsRequestParser;
 import transactions.parser.json.TransactionsResponseParser;
 
-import java.io.IOException;
-import java.io.OutputStream;
-
 public class TransactionsController extends HttpController {
 
     @Override
-    public void handlePost(HttpExchange exchange, String requestBody) throws IOException {
+    public void handlePostRequest(HttpServerExchange exchange, String requestBody) {
         Accounts accounts = parseRequestBody(requestBody);
 
         String jsonResponse = TransactionsResponseParser.parseResponse(accounts);
@@ -29,10 +26,8 @@ public class TransactionsController extends HttpController {
         return TransactionsService.getAccountsFromTransactions(transactions);
     }
 
-    private void sendResponse(HttpExchange exchange, String response) throws IOException {
-        exchange.sendResponseHeaders(200, response.length());
-        try (OutputStream outputStream = exchange.getResponseBody()) {
-            outputStream.write(response.getBytes());
-        }
+    private void sendResponse(HttpServerExchange exchange, String response) {
+        exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "application/json");
+        exchange.getResponseSender().send(response);
     }
 }

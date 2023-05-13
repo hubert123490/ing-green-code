@@ -1,6 +1,7 @@
 package onlinegame.controller;
 
-import com.sun.net.httpserver.HttpExchange;
+import io.undertow.server.HttpServerExchange;
+import io.undertow.util.Headers;
 import onlinegame.logic.OnlineGameService;
 import onlinegame.model.request.Players;
 import onlinegame.model.response.Order;
@@ -8,13 +9,11 @@ import onlinegame.parser.json.OnlineGameRequestParser;
 import onlinegame.parser.json.OnlineGameResponseParser;
 import server.HttpController;
 
-import java.io.IOException;
-import java.io.OutputStream;
 
 public class OnlineGameController extends HttpController {
 
     @Override
-    public void handlePost(HttpExchange exchange, String requestBody) throws IOException {
+    public void handlePostRequest(HttpServerExchange exchange, String requestBody) {
         Order order = parseRequestBody(requestBody);
 
         String jsonResponse = OnlineGameResponseParser.parseResponse(order);
@@ -28,10 +27,8 @@ public class OnlineGameController extends HttpController {
         return OnlineGameService.getOrderFromPlayers(players);
     }
 
-    private void sendResponse(HttpExchange exchange, String response) throws IOException {
-        exchange.sendResponseHeaders(200, response.length());
-        try (OutputStream outputStream = exchange.getResponseBody()) {
-            outputStream.write(response.getBytes());
-        }
+    private void sendResponse(HttpServerExchange exchange, String response) {
+        exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "application/json");
+        exchange.getResponseSender().send(response);
     }
 }

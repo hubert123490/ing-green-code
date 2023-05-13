@@ -1,38 +1,37 @@
 package server;
 
-import com.sun.net.httpserver.HttpExchange;
-import com.sun.net.httpserver.HttpHandler;
+import io.undertow.server.HttpHandler;
+import io.undertow.server.HttpServerExchange;
+import io.undertow.util.Headers;
+import io.undertow.util.Methods;
 
 import java.io.IOException;
-import java.io.InputStream;
 
 public abstract class HttpController implements HttpRESTHandler, HttpHandler {
 
     @Override
-    public void handle(HttpExchange exchange) throws IOException {
-        String requestMethod = exchange.getRequestMethod().toUpperCase();
-        String requestBody = this.readRequestBody(exchange);
-
-        if ("POST".equals(requestMethod)) {
-            handlePost(exchange, requestBody);
+    public void handleRequest(HttpServerExchange exchange) throws RuntimeException {
+        if (exchange.getRequestMethod().equals(Methods.POST)) {
+            handlePostRequest(exchange);
         } else {
-            sendDefaultResponse(exchange);
+            sendNonSupportedMethodResponse(exchange);
         }
     }
 
-    @Override
-    public abstract void handlePost(HttpExchange exchange, String requestBody) throws IOException;
-
-    private String readRequestBody(HttpExchange exchange) throws IOException {
-        InputStream requestBody = exchange.getRequestBody();
-
-        byte[] requestBodyBytes = requestBody.readAllBytes();
-
-        return new String(requestBodyBytes);
+    private void handlePostRequest(HttpServerExchange exchange) {
+        exchange.getRequestReceiver().receiveFullBytes((currExchange, bytes) -> {
+            String requestBody = new String(bytes);
+            try {
+                handlePostRequest(currExchange, requestBody);
+            } catch (IOException e) {
+                throw new RequestHandlingException("Error handling request", e);
+            }
+        });
     }
 
-    private void sendDefaultResponse(HttpExchange exchange) throws IOException {
-        exchange.sendResponseHeaders(404, 0);
-        exchange.close();
+    private void sendNonSupportedMethodResponse(HttpServerExchange exchange) {
+        exchange.setStatusCode(404);
+        exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "text/plain");
+        exchange.getResponseSender().send("Not Found");
     }
 }
